@@ -11,6 +11,8 @@ public class GUIManager : MonoBehaviour
     public bool showOptions;
     public bool showPauseOptions;
     public bool showPauseControls;
+    // setting bool true or false
+    public bool fullscreen;
     [Header("Keys")]
     public KeyCode forward;
     public KeyCode backward;
@@ -33,9 +35,26 @@ public class GUIManager : MonoBehaviour
     public Slider volumeSlider, brightnessSlider;
     public Light brightness;
     public Text forwardText, backwardText, leftText, rightText, jumpText, crouchText, sprintText, meleeText, shootText, interactText;
-
+    // Setting toggle field to "fullscreen"
+    public Toggle fullScreen;
+    public Toggle mute;
+    // setting dropdown field to "resolution"
+    public Dropdown resolution;
     void Start()
     {
+        // makes build fullscreen
+        fullscreen = true;
+        // setting the resolution
+        Screen.SetResolution(640, 480, false);
+        Screen.SetResolution(1024, 575, false);
+        Screen.SetResolution(1280, 720, false);
+        Screen.SetResolution(1600, 900, false);
+        Screen.SetResolution(1920, 1080, false);
+        Screen.SetResolution(2560, 1440, false);
+        Screen.SetResolution(3840, 2160, false);
+        Screen.SetResolution(7680, 4800, false);
+        Screen.SetResolution(1600, 1000, true);
+
 
         if (mainMusic != null && volumeSlider != null)
         {
@@ -49,6 +68,7 @@ public class GUIManager : MonoBehaviour
         {
             brightnessSlider.value = brightness.intensity;
         }
+        
         #region Key Set Up
         forward = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Forward", "W"));
         backward = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("Backward", "S"));
@@ -168,6 +188,7 @@ public class GUIManager : MonoBehaviour
         PlayerPrefs.SetString("Interact", interact.ToString());
         PlayerPrefs.SetString("Melee", melee.ToString());
         PlayerPrefs.SetString("Shoot", shoot.ToString());
+        PlayerPrefs.SetInt("640 x 480", 
     }
     public void Load()
     {
@@ -183,6 +204,13 @@ public class GUIManager : MonoBehaviour
         interactText.text = PlayerPrefs.GetString("Interact");
         meleeText.text = PlayerPrefs.GetString("Melee");
         shootText.text = PlayerPrefs.GetString("Shoot");
+    }
+    public void ScreenToggle()// Name the function "ScreenToggle"
+    {
+        // Once enabled it flips
+        Screen.fullScreen = !Screen.fullScreen;
+        // Ensures ScreenToggle works with fullscreen bool
+        fullscreen = !fullscreen;
     }
     void OnGUI()
     {
@@ -586,4 +614,40 @@ public class GUIManager : MonoBehaviour
         }
     }
     #endregion
+    public void Resolution()// Named the function "Resolution"
+    {
+        // References the Option names in the dropdown component
+        switch (resolution.captionText.text)
+        {
+            // Each case name matches each option name and displays resolution
+            case "640 x 480":
+                Screen.SetResolution(640, 480, fullscreen);
+                break;
+            case "1024 x 575":
+                Screen.SetResolution(1024, 575, fullscreen);
+                break;
+            case "1280 x 720":
+                Screen.SetResolution(1280, 720, fullscreen);
+                break;
+            case "1600 x 900":
+                Screen.SetResolution(1600, 900, fullscreen);
+                break;
+            case "1920 x 1080":
+                Screen.SetResolution(1920, 1080, fullscreen);
+                break;
+            case "2560 x 1440":
+                Screen.SetResolution(2560, 1440, fullscreen);
+                break;
+            case "3840 x 2160":
+                Screen.SetResolution(3840, 2160, fullscreen);
+                break;
+            case "7680 x 4800":
+                Screen.SetResolution(7680, 4800, fullscreen);
+                break;
+            // This is the default set resolution
+            default:
+                Screen.SetResolution(1600, 1000, fullscreen);
+                    break;
+        }
+    }
 }
