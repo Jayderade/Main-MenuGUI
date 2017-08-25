@@ -13,6 +13,7 @@ public class GUIManager : MonoBehaviour
     public bool showPauseControls;
     // setting bool true or false
     public bool fullscreen;
+    public bool fullScreenToggle;
     [Header("Keys")]
     public KeyCode forward;
     public KeyCode backward;
@@ -25,6 +26,11 @@ public class GUIManager : MonoBehaviour
     public KeyCode melee;
     public KeyCode shoot;
     public KeyCode holdingKey;
+    [Header("Resolutions")]
+    public int index;
+    public int[] resX, resY;    
+    public Dropdown resolutionDropdown;
+    // Dropdown has a value variable that you can use to reference arrays
     [Header("References")]
     public GameObject menu;
     public GameObject controls;
@@ -42,9 +48,11 @@ public class GUIManager : MonoBehaviour
     public Dropdown resolution;
     void Start()
     {
+        /*
         // makes build fullscreen
         fullscreen = true;
         // setting the resolution
+        
         Screen.SetResolution(640, 480, false);
         Screen.SetResolution(1024, 575, false);
         Screen.SetResolution(1280, 720, false);
@@ -54,7 +62,7 @@ public class GUIManager : MonoBehaviour
         Screen.SetResolution(3840, 2160, false);
         Screen.SetResolution(7680, 4800, false);
         Screen.SetResolution(1600, 1000, true);
-
+        */
 
         if (mainMusic != null && volumeSlider != null)
         {
@@ -91,6 +99,22 @@ public class GUIManager : MonoBehaviour
         interactText.text = interact.ToString();
         shootText.text = shoot.ToString();
         meleeText.text = melee.ToString();
+        #endregion
+        #region Resolution
+        index  =PlayerPrefs.GetInt("Res", 3);
+        int fullWindow = PlayerPrefs.GetInt("FullWindow", 1);
+        if(fullWindow == 0)
+        {
+            fullscreen = false;
+            fullScreen.isOn = false;
+        }
+        else
+        {
+            fullscreen = true;
+            fullScreen.isOn = true;
+        }
+        resolutionDropdown.value = index;
+        Screen.SetResolution(resX[index], resY[index], fullscreen);
         #endregion
     }
     void Update()
@@ -188,7 +212,17 @@ public class GUIManager : MonoBehaviour
         PlayerPrefs.SetString("Interact", interact.ToString());
         PlayerPrefs.SetString("Melee", melee.ToString());
         PlayerPrefs.SetString("Shoot", shoot.ToString());
-        PlayerPrefs.SetInt("640 x 480", 
+
+        // Resolution
+        PlayerPrefs.SetInt("Res", index);        
+        if (fullScreenToggle)
+        {
+            PlayerPrefs.SetInt("FullWindow", 1);
+        }
+        else {
+            PlayerPrefs.SetInt("FullWindow", 0);
+        }
+
     }
     public void Load()
     {
@@ -210,7 +244,7 @@ public class GUIManager : MonoBehaviour
         // Once enabled it flips
         Screen.fullScreen = !Screen.fullScreen;
         // Ensures ScreenToggle works with fullscreen bool
-        fullscreen = !fullscreen;
+        fullScreenToggle = !fullScreenToggle;
     }
     void OnGUI()
     {
@@ -613,8 +647,13 @@ public class GUIManager : MonoBehaviour
             shootText.text = shoot.ToString();
         }
     }
-    #endregion
-    public void Resolution()// Named the function "Resolution"
+    #endregion    
+    public void ResolutionChange()
+    {
+        index = resolutionDropdown.value;
+        Screen.SetResolution(resX[index], resY[index], fullScreenToggle);
+    }
+   /* public void Resolution()// Named the function "Resolution"
     {
         // References the Option names in the dropdown component
         switch (resolution.captionText.text)
@@ -649,5 +688,5 @@ public class GUIManager : MonoBehaviour
                 Screen.SetResolution(1600, 1000, fullscreen);
                     break;
         }
-    }
+    }*/    
 }
