@@ -11,9 +11,11 @@ public class GUIManager : MonoBehaviour
     public bool showOptions;
     public bool showPauseOptions;
     public bool showPauseControls;
+    public bool gameScene;
     // setting bool true or false
     public bool fullscreen;
     public bool fullScreenToggle;
+    public bool pause;
     [Header("Keys")]
     public KeyCode forward;
     public KeyCode backward;
@@ -127,8 +129,15 @@ public class GUIManager : MonoBehaviour
         {
             brightness.intensity = brightnessSlider.value;
         }
-       
 
+        if (gameScene)
+        {
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                TogglePause();
+            }
+        }
     }
     public void Play()
     {
@@ -653,40 +662,74 @@ public class GUIManager : MonoBehaviour
         index = resolutionDropdown.value;
         Screen.SetResolution(resX[index], resY[index], fullScreenToggle);
     }
-   /* public void Resolution()// Named the function "Resolution"
+    /* public void Resolution()// Named the function "Resolution"
+     {
+         // References the Option names in the dropdown component
+         switch (resolution.captionText.text)
+         {
+             // Each case name matches each option name and displays resolution
+             case "640 x 480":
+                 Screen.SetResolution(640, 480, fullscreen);
+                 break;
+             case "1024 x 575":
+                 Screen.SetResolution(1024, 575, fullscreen);
+                 break;
+             case "1280 x 720":
+                 Screen.SetResolution(1280, 720, fullscreen);
+                 break;
+             case "1600 x 900":
+                 Screen.SetResolution(1600, 900, fullscreen);
+                 break;
+             case "1920 x 1080":
+                 Screen.SetResolution(1920, 1080, fullscreen);
+                 break;
+             case "2560 x 1440":
+                 Screen.SetResolution(2560, 1440, fullscreen);
+                 break;
+             case "3840 x 2160":
+                 Screen.SetResolution(3840, 2160, fullscreen);
+                 break;
+             case "7680 x 4800":
+                 Screen.SetResolution(7680, 4800, fullscreen);
+                 break;
+             // This is the default set resolution
+             default:
+                 Screen.SetResolution(1600, 1000, fullscreen);
+                     break;
+         }
+     }*/
+    public void ReturnGame()
     {
-        // References the Option names in the dropdown component
-        switch (resolution.captionText.text)
+        TogglePause();
+    }
+    public bool TogglePause()
+    {
+        if (pause)
         {
-            // Each case name matches each option name and displays resolution
-            case "640 x 480":
-                Screen.SetResolution(640, 480, fullscreen);
-                break;
-            case "1024 x 575":
-                Screen.SetResolution(1024, 575, fullscreen);
-                break;
-            case "1280 x 720":
-                Screen.SetResolution(1280, 720, fullscreen);
-                break;
-            case "1600 x 900":
-                Screen.SetResolution(1600, 900, fullscreen);
-                break;
-            case "1920 x 1080":
-                Screen.SetResolution(1920, 1080, fullscreen);
-                break;
-            case "2560 x 1440":
-                Screen.SetResolution(2560, 1440, fullscreen);
-                break;
-            case "3840 x 2160":
-                Screen.SetResolution(3840, 2160, fullscreen);
-                break;
-            case "7680 x 4800":
-                Screen.SetResolution(7680, 4800, fullscreen);
-                break;
-            // This is the default set resolution
-            default:
-                Screen.SetResolution(1600, 1000, fullscreen);
-                    break;
+            if (!showOptions)
+            {
+                Time.timeScale = 1;
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                menu.SetActive(false);
+                pause = false;
+            }
+            else
+            {
+                showOptions = false;
+                options.SetActive(false);
+                menu.SetActive(true);
+            }
+            return false;
         }
-    }*/    
+        else
+        {
+            Time.timeScale = 0;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            pause = true;
+            menu.SetActive(true);
+            return true;
+        }
+    }
 }

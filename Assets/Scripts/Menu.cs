@@ -33,26 +33,48 @@ public class Menu : MonoBehaviour
     public float brightnessSlider;
     public float holdingVolume;
     public bool muteToggle;
+    [Header("Art")]
+    public GUISkin menuSkin;
+    public GUIStyle boxStyle;
+
+    public void Forward()
+    {
+        if (!(backward == KeyCode.None || left == KeyCode.None || right == KeyCode.None))
+        {
+            // Set our holding key to the key of this button
+            holdingKey = forward;
+            // Set this button to none allowing us to edit only this button
+            forward = KeyCode.None;
+            // Set the GUI to blank
+            //forwardText.text = forward.ToString();
+        }
+    }
 
     void OnGUI()
     {
+
+
+
         if (!showOptions) // If we are in our menu
         {
-            GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "");
-            GUI.Box(new Rect(4*scrW, 0.25f*scrH, 8*scrW, 2*scrH), "Brain Exploders");
+            GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "", boxStyle);
+            GUI.skin = menuSkin;
+            GUI.Box(new Rect(0 * scrW, 0.25f * scrH, 8 * scrW, 2 * scrH), "Brain Exploders");
             // Buttons
-            if (GUI.Button(new Rect(6*scrW, 4*scrH, 4*scrW, .5f * scrH), "Play"))
+            if (GUI.Button(new Rect(0 * scrW, 4 * scrH, 4 * scrW, 1f * scrH), "Play"))
             {
                 SceneManager.LoadScene(1);
             }
-            if (GUI.Button(new Rect(6*scrW, 5*scrH, 4*scrW, .5f * scrH), "Options"))
+            if (GUI.Button(new Rect(0 * scrW, 5 * scrH, 4 * scrW, 1f * scrH), "Options"))
             {
                 showOptions = !showOptions; // showOptions = true;
             }
-            if (GUI.Button(new Rect(6*scrW, 6*scrH, 4*scrW, .5f * scrH), "Exit"))
+
+            if (GUI.Button(new Rect(0 * scrW, 6 * scrH, 4 * scrW, 1f * scrH), "Exit"))
             {
                 Application.Quit();
             }
+            GUI.skin = null;
         }
         if (showOptions) // If we are in options
         {
@@ -65,39 +87,90 @@ public class Menu : MonoBehaviour
             int i = 0;
             GUI.Box(new Rect(4 * scrW, 0.25f * scrH, 8 * scrW, 2 * scrH), "Options");//Title
 
-            GUI.Box(new Rect(0.5f * scrW, 3 * scrH + (i * 0.75f* scrH),2 * scrW, 0.75f* scrH), "Volume");
-            volumeSlider = GUI.HorizontalSlider(new Rect(3 * scrW, 3.25f* scrH + (i * 1f * scrH), 2f * scrW, 0.25f * scrH), volumeSlider, 0, 1);
+            GUI.Box(new Rect(0.5f * scrW, 3 * scrH + (i * 0.75f * scrH), 2 * scrW, 0.5f * scrH), "Volume");
+            volumeSlider = GUI.HorizontalSlider(new Rect(3 * scrW, 3.25f * scrH + (i * 1f * scrH), 2f * scrW, 0.25f * scrH), volumeSlider, 0, 1);
 
-            if(GUI.Button(new Rect(5.75f * scrW, 3 * scrH + (i * (scrH * 0.5f)),1.5f * scrW, 0.5f * scrH), "Mute")) // Label
+            if (GUI.Button(new Rect(9.5f * scrW, 3f * scrH + (i * (scrH * 0.5f)), 1.5f * scrW, 0.5f * scrH), "Up"))
+            {
+                Event e = Event.current;
+                if (forward == KeyCode.None)
+                {
+                    // If an event is triggered by a key press
+                    if (e.isKey)
+                    {
+                        Debug.Log("Key Code" + e.keyCode);
+                        // If the key is not the same as the other ones
+                        if (!(e.keyCode == backward || e.keyCode == left || e.keyCode == right))
+                        {
+                            // Set forward to the new key
+                            forward = e.keyCode;
+                            // Set holding key to none
+                            holdingKey = KeyCode.None;
+                            // Set to new Key
+
+                        }
+                        else
+                        {
+                            // Set forward back to what the holding key is
+                            forward = holdingKey;
+                            // Set holding key to none
+                            holdingKey = KeyCode.None;
+                            // Set back to last key
+
+                        }
+                    }                    
+                }
+            }
+
+            if (GUI.Button(new Rect(9.5f * scrW, 4f * scrH + (i * (scrH * 0.5f)), 1.5f * scrW, 0.5f * scrH), "Down"))
+            {
+
+            }
+
+            if (GUI.Button(new Rect(8.75f * scrW, 3.5f * scrH + (i * (scrH * 0.5f)), 1.5f * scrW, 0.5f * scrH), "Left"))
+            {
+
+            }
+
+            if (GUI.Button(new Rect(10.25f * scrW, 3.5f * scrH + (i * (scrH * 0.5f)), 1.5f * scrW, 0.5f * scrH), "Right"))
+            {
+
+            }
+
+            if (GUI.Button(new Rect(14.5f * scrW, 8.5f * scrH + (i * (scrH * 0.5f)), 1.5f * scrW, 0.5f * scrH), "Back"))
+            {
+                showOptions = false;
+            }
+            if (GUI.Button(new Rect(5.75f * scrW, 3 * scrH + (i * (scrH * 0.5f)), 1.5f * scrW, 0.5f * scrH), "Mute")) // Label
             {
                 ToggleVolume();
             }
 
             i++;
-            GUI.Box(new Rect(0.5f * scrW, 3 * scrH + (i * 0.75f* scrH),2 * scrW, 0.75f* scrH), "Brightness");
-           brightnessSlider = GUI.HorizontalSlider(new Rect(3 * scrW, 3.25f * scrH + (i * .75f* scrH), 2f * scrW, 0.25f * scrH),brightnessSlider, 0, 1);
+            GUI.Box(new Rect(0.5f * scrW, 3 * scrH + (i * 0.75f * scrH), 2 * scrW, 0.5f * scrH), "Brightness");
+            brightnessSlider = GUI.HorizontalSlider(new Rect(3 * scrW, 3.25f * scrH + (i * .75f * scrH), 2f * scrW, 0.25f * scrH), brightnessSlider, 0, 1);
 
             #region Resoulution and Screen
             i++;
-            if(GUI.Button(new Rect(0.5f * scrW, 3 * scrH + (i * 0.75f * scrH), 2 * scrW, 0.5f * scrH), "Resolutions"))
+            if (GUI.Button(new Rect(0.5f * scrW, 3 * scrH + (i * 0.75f * scrH), 2 * scrW, 0.5f * scrH), "Resolutions"))
             {
                 showRes = !showRes;
             }
 
-            if (GUI.Button(new Rect(2f * scrW, 3 * scrH + (i * 0.75f * scrH), 1.75f * scrW, 0.5f * scrH), "FullScreen"))
+            if (GUI.Button(new Rect(2.5f * scrW, 3 * scrH + (i * 0.75f * scrH), 1.75f * scrW, 0.5f * scrH), "FullScreen"))
             {
                 FullScreenToggle();
             }
             i++;
             if (showRes)
             {
-                GUI.Box(new Rect(0.75f * scrW, 3 * scrH + (i * (scrH * 0.5f)), 1.75f * scrW, 3.5f * scrH), "");
+                GUI.Box(new Rect(.5f * scrW, 3.5f * scrH + (i * (scrH * 0.5f)), 2f * scrW, 3f * scrH), "");
 
                 scrollPosRes = GUI.BeginScrollView(new Rect(0.75f * scrW, 3 * scrH + (i * (scrH * 0.5f)), 1.75f * scrW, 3.5f * scrH), scrollPosRes, new Rect(0, 0, 1.75f * scrW, 3.5f * scrH));
 
                 for (int resSize = 0; resSize < resX.Length; resSize++)
                 {
-                    if (GUI.Button(new Rect(0f * scrW, 0 * scrH + resSize * (scrH * 0.5f), 1.75f * scrW, 0.5f * scrH), resX[resSize].ToString() + "x" + resY[resSize].ToString()))
+                    if (GUI.Button(new Rect(-.25f * scrW, .5f * scrH + resSize * (scrH * 0.5f), 2f * scrW, 0.5f * scrH), resX[resSize].ToString() + "x" + resY[resSize].ToString()))
                     {
                         Screen.SetResolution(resX[resSize], resY[resSize], fullScreenToggle);
                         showRes = false;
@@ -112,7 +185,7 @@ public class Menu : MonoBehaviour
 
     bool ToggleVolume()
     {
-        if(muteToggle == true)
+        if (muteToggle == true)
         {
             muteToggle = false;
             volumeSlider = holdingVolume;
@@ -128,9 +201,11 @@ public class Menu : MonoBehaviour
         }
     }
 
+
+
     bool FullScreenToggle()
     {
-        if(fullScreenToggle)
+        if (fullScreenToggle)
         {
             fullScreenToggle = false;
             Screen.fullScreen = false;
@@ -147,7 +222,7 @@ public class Menu : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        scrW = Screen.width / 16;        
+        scrW = Screen.width / 16;
         scrH = Screen.height / 9;
         fullScreenToggle = true;
 
@@ -160,11 +235,11 @@ public class Menu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(mainMusic != null)
+        if (mainMusic != null)
         {
-            if(muteToggle == false)
+            if (muteToggle == false)
             {
-                if(mainMusic.volume != volumeSlider)
+                if (mainMusic.volume != volumeSlider)
                 {
                     holdingVolume = volumeSlider;
                     mainMusic.volume = volumeSlider;
@@ -179,7 +254,7 @@ public class Menu : MonoBehaviour
 
         if (brightness != null)
         {
-            if(brightnessSlider != brightness.intensity)
+            if (brightnessSlider != brightness.intensity)
             {
                 brightness.intensity = brightnessSlider;
             }
