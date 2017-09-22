@@ -61,16 +61,16 @@ public class Menu : MonoBehaviour
             GUI.skin = menuSkin;
             GUI.Box(new Rect(0 * scrW, 0.25f * scrH, 8 * scrW, 2 * scrH), "Brain Exploders");
             // Buttons
-            if (GUI.Button(new Rect(0 * scrW, 4 * scrH, 4 * scrW, 1f * scrH), "Play"))
+            if (GUI.Button(new Rect(2 * scrW, 3 * scrH, 4 * scrW, .75f * scrH), "Play"))
             {
                 SceneManager.LoadScene(1);
             }
-            if (GUI.Button(new Rect(0 * scrW, 5 * scrH, 4 * scrW, 1f * scrH), "Options"))
+            if (GUI.Button(new Rect(2 * scrW, 4 * scrH, 4 * scrW, .75f * scrH), "Options"))
             {
                 showOptions = !showOptions; // showOptions = true;
             }
 
-            if (GUI.Button(new Rect(0 * scrW, 6 * scrH, 4 * scrW, 1f * scrH), "Exit"))
+            if (GUI.Button(new Rect(2 * scrW, 5 * scrH, 4 * scrW, .75f * scrH), "Exit"))
             {
                 Application.Quit();
             }
